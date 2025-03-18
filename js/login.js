@@ -36,14 +36,24 @@ let sendData = async (data) => {
     try {
         let respuesta = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" 
-            },
-
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
-        let userLogin = await respuesta.json();
-        alert("Bienvenido " + userLogin.nombre);
-        location.href = "../index.html";
+        if (respuesta.status === 401){
+            alert("Usuario o contraseña incorrectos");
+            userInput.value = "";
+            passInput.value = "";
+            
+        }else{
+            let userLogin = await respuesta.json();
+            alert("Bienvenido " + userLogin.nombre);
+            //guardar datos en localStorage
+            localStorage.setItem("userLoguin",JSON.stringify(userLogin));
+
+            location.href = "../index.html";
+
+        }
+
         //console.log(userLogin);
     } catch (error) {
     console.log(error);  
